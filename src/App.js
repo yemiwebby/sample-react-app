@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import Photo from "./components/Photo";
 
-function App() {
+const App = () => {
+  const [photoData, setPhotoData] = useState(null);
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/albums/1/photos")
+      .then((response) => response.json())
+      .then((data) => setPhotoData(data));
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {photoData ? (
+        photoData.map((photo, index) => (
+          <Photo
+            key={photo.id}
+            title={photo.title}
+            url={photo.url}
+            thumbnailUrl={photo.thumbnailUrl}
+          />
+        ))
+      ) : (
+        <div>
+          <p> No data found </p>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
